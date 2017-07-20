@@ -21,7 +21,7 @@ AcoraCMS is widely used accross Austalian IT companies, Banks and government web
 AcoraCMS, v6.0.6/1a, v6.0.2/1a, v5.5.7/12b, v5.5.0/1b-p1  (and probably others), are prone to several security issues as described below;
 
 
-.: [ ISSUE #1 }:.
+.: [ ISSUE #1 ] :.
 
 Name: Reflected Cross Site Scripting
 Severity: Medium 
@@ -38,7 +38,7 @@ Example:
 /AcoraCMS/Admin/login/default.asp?url="</form><META HTTP-EQUIV=Refresh CONTENT="0; URL=http://www.google.es">
 
 
-.: [ ISSUE #2 }:.
+.: [ ISSUE #2 ] :.
 
 Name: URL Redirect
 Severity Medium
@@ -51,7 +51,7 @@ Example:
 /AcoraCMS/track.aspx?m=1&l=//www.google.es
 
 
-.: [ ISSUE #3 }:.
+.: [ ISSUE #3 ] :.
 
 Name: Username and password sent in clear text
 Severity: Medium
@@ -59,7 +59,7 @@ Severity: Medium
 Authentication credentials (username and password) and session cookies are unencrypted.
 
 
-.: [ ISSUE #4 }:.
+.: [ ISSUE #4 ] :.
 
 Name: Cookie Lack of Hardening
 Severity: Low
@@ -68,7 +68,7 @@ CVE: CVE-2013-4724 & CVE-2013-4725
 Cookies are not hardened using HttpOnly or Secure flags.
 
 
-.: [ ISSUE #5 }:.
+.: [ ISSUE #5 ] :.
 
 Name: XSRF
 Severity: Low
@@ -77,7 +77,7 @@ CVE: CVE-2013-4726
 The application lacks controls to prevent Cross Site Request Forgery. 
 
 
-.: [ ISSUE #6 }:.
+.: [ ISSUE #6 ] :.
 
 Name: Information Leaks
 Severity: Low

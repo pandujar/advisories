@@ -31,7 +31,7 @@ Despite other scenarios offers better performance (like attacking the EPM direct
 can take advantage of Unlock.exe to attempt to bruteforce the password.
 
 
-.: [ ISSUE #1 }:.
+.: [ ISSUE #1 ] :.
 
 Name: Multiple Unlock.exe instances 
 Severity: Low
@@ -46,7 +46,7 @@ synchronization regarding the state of failed password attempts.
 
 
 
-.: [ ISSUE #2 }:.
+.: [ ISSUE #2 ] :.
 
 Name: Device link not enforced
 Severity: Low

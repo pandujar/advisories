@@ -21,7 +21,7 @@ DS3 Authentication Server (unknown version) is prone to several security
 issues as described below;
 
 
-.: [ ISSUE #1 }:.
+.: [ ISSUE #1 ] :.
 
 Name: Command execution
 Severity: High
@@ -79,7 +79,7 @@ Successful connection to -;uname on port -a</TEXTAREA>
 
 
 
-.: [ ISSUE #2 }:.
+.: [ ISSUE #2 ] :.
 
 Name: Physical Path Disclosure
 Severity: Low
@@ -127,7 +127,7 @@ line #9
 
 
 
-.: [ ISSUE #3 }:.
+.: [ ISSUE #3 ] :.
 
 Name: User Controlable Error Message
 Severity: Low

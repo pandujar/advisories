@@ -23,7 +23,7 @@ Cisco IronPort Security Management Appliance M170 v7.9.1-030 (and probably other
 as described below;
 
 
-.: [ ISSUE #1 }:.
+.: [ ISSUE #1 ] :.
 
 Name: Reflected Cross Site Scripting
 Severity: Low 
@@ -35,7 +35,7 @@ description contains user unvalidated input from the request:
 ** PoC removed as requested by Cisco. **
 
 
-.: [ ISSUE #2 }:.
+.: [ ISSUE #2 ] :.
 
 Name: Stored Cross Site Scripting
 Severity: Medium
@@ -47,7 +47,7 @@ printed unscapped on job_name, old_job_name, job_type, appliance_lists and confi
 ** PoC removed as requested by Cisco. **
 
 
-.: [ ISSUE #3 }:.
+.: [ ISSUE #3 ] :.
 
 Name: CSRF Token is not used
 Severity: Low
@@ -60,7 +60,7 @@ of the application, we got no error even when completely removing the parameter 
 
 See: http://tools.cisco.com/security/center/viewAlert.x?alertId=29844
 
-.: [ ISSUE #4 }:.
+.: [ ISSUE #4 ] :.
 
 Name: Lack of password obfuscation
 Severity: Low

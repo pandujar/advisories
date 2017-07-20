@@ -23,7 +23,7 @@ Imperva SecureSphere Operations Manager version 9.0.0.5 Enterprise Edition and p
 as described below;
 
 
-.: [ ISSUE #1 }:.
+.: [ ISSUE #1 ] :.
 
 Name: Autocomplete atribute not disabled in login page
 Severity: Low
@@ -41,7 +41,7 @@ AUTOCOMPLETE is not disabled on the /secsphLogin.jsp page. This prevents the web
 <input size=30 type='password' name='j_password' style="width:172px"/>
 
 
-.: [ ISSUE #2 }:.
+.: [ ISSUE #2 ] :.
 
 Name: Sensitive information is passed as parameter in URL
 Severity: Low
@@ -58,7 +58,7 @@ GET /SecureSphere/j_acegi_security_check?j_password=5352023200062562773&j_userna
 
 
 
-.: [ ISSUE #3 }:.
+.: [ ISSUE #3 ] :.
 
 Name: Physical Path Disclosure
 Severity: Low
@@ -84,7 +84,7 @@ See also ISSUE #4, where additional file path disclosure occurs.
 
 
 
-.: [ ISSUE #4 }:.
+.: [ ISSUE #4 ] :.
 
 Name: Insufficients checks on file upload
 Severity: High
@@ -146,7 +146,7 @@ An error occurred while importing keys: Failed to load PEM key from &#039;/var/t
 
 
 
-.: [ ISSUE #5 }:.
+.: [ ISSUE #5 ] :.
 
 Name: Insufficients checks on Action Set (OS command) 
 Severity: High
