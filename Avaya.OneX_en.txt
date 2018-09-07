@@ -90,7 +90,7 @@ Vulnerable piece of code:
 
 .: [ CHANGELOG ] :.
 
-  * 18/Mar/2018:   - Vuln during pentest engagement.
+  * 18/Mar/2018:   - Vuln discovered during pentest engagement.
   * 19/Mar/2018:   - Avaya product security contacted. 
   * 19/Mar/2018:   - Avaya product security replied. 
   * 23/Mar/2018:   - Avaya product security confirmed and planned fix. 
