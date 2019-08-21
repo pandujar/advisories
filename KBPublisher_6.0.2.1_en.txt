@@ -36,7 +36,7 @@ https://SITE/admin/index.php?module=log&page=login_log&action=detail&id=PAYLOAD
 The publicly accesible URL, correspond to the print feature:
 https://SITE/index.php?View=print&id%5B%5D=PAYLOAD
 
-During the test, it was possible to dump and crack users of the application as any other content from the DB.
+During the test, it was possible to dump users and hashes of the application as any other content from the DB.
 
 
 .: [ CHANGELOG ] :.
