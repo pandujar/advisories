@@ -18,7 +18,7 @@ time wasted searching for information.
 
 .: [ TECHNICAL DESCRIPTION ] :.
 
-KBPublisher release 6.0.2 contains multiple SQLi vulnerabilities that affect not only the admin interface but also the public (unauthenticated)
+KBPublisher release 6.0.2, and probably prior versions, contain multiple SQLi vulnerabilities that affect not only the admin interface but also the public (unauthenticated)
 area of the application
 
 
